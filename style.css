@@ -850,11 +850,139 @@ a { color: var(--c-accent); text-decoration: none; }
 }
 .enc-badge svg { width: 12px; height: 12px; fill: var(--c-text-3); }
 
-/* ── Responsive ── */
+/* ══════════════════════════════════════════════════
+   RESPONSIVE — TABLET & MOBILE
+══════════════════════════════════════════════════ */
+
+/* ── Tablet (≤900px) ── */
+@media (max-width: 900px) {
+  :root { --sidebar-w: 300px; }
+  .bubble-row { max-width: 75%; }
+}
+
+/* ── Mobile (≤768px) ── */
 @media (max-width: 768px) {
   :root { --sidebar-w: 100vw; }
-  .sidebar { position: absolute; z-index: 20; height: 100%; transition: transform .28s ease; }
-  .sidebar.mobile-hide { transform: translateX(-100%); }
-  .auth-card { padding: 32px 24px; }
-  .bubble-row { max-width: 82%; }
+
+  /* App layout — full screen stack */
+  .app { position: relative; overflow: hidden; }
+
+  /* Sidebar fills full screen on mobile */
+  .sidebar {
+    position: absolute; z-index: 20;
+    width: 100vw; height: 100%;
+    transition: transform .3s cubic-bezier(.4,0,.2,1);
+    transform: translateX(0);
+  }
+  /* Hidden state — slide off left */
+  .sidebar.mobile-hide {
+    transform: translateX(-100%);
+    pointer-events: none;
+  }
+
+  /* Main panel fills full screen */
+  .main {
+    position: absolute; inset: 0; z-index: 10;
+    width: 100vw;
+    transform: translateX(100%);
+    transition: transform .3s cubic-bezier(.4,0,.2,1);
+  }
+  .main.mobile-show {
+    transform: translateX(0);
+  }
+
+  /* Back button in chat header — mobile only */
+  .back-btn {
+    display: flex !important;
+    align-items: center; justify-content: center;
+    width: 36px; height: 36px;
+    border: none; background: none;
+    color: var(--c-text-2); cursor: pointer;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: background var(--transition);
+  }
+  .back-btn:hover { background: var(--c-surface-2); }
+  .back-btn svg   { width: 20px; height: 20px; }
+
+  /* Auth page */
+  .auth-page { padding: 16px; align-items: flex-start; padding-top: 40px; overflow-y: auto; height: auto; min-height: 100vh; }
+  .auth-card  { width: 100%; max-width: 100%; padding: 28px 22px; }
+  .auth-logo-name { font-size: 18px; }
+  .auth-logo-icon { width: 38px; height: 38px; }
+
+  /* Bubbles */
+  .bubble-row { max-width: 88%; }
+  .bubble { font-size: 14px; }
+  .bubble-img { max-width: 200px; }
+
+  /* Messages area */
+  .messages-area { padding: 12px 4%; }
+
+  /* Input bar */
+  .input-bar { padding: 8px 10px; gap: 6px; }
+  .input-box  { font-size: 14px; padding: 9px 12px; }
+  .send-btn   { width: 40px; height: 40px; }
+
+  /* Chat header */
+  .chat-header { padding: 8px 10px; gap: 8px; min-height: 56px; }
+  .chat-header-name { font-size: 14.5px; }
+
+  /* Sidebar header */
+  .sidebar-header { padding: 12px 14px; }
+  .sidebar-brand-name { font-size: 15px; }
+
+  /* Sidebar profile bar */
+  .sidebar-profile { padding: 10px 12px; }
+  .sidebar-profile-name { font-size: 13px; }
+
+  /* User list items */
+  .user-item { padding: 10px 12px; }
+  .user-item-name { font-size: 14px; }
+
+  /* Modals — full width on mobile */
+  .modal { width: 95vw; max-width: 95vw; }
+  .modal-header { padding: 16px 18px 0; }
+  .modal-body   { padding: 16px 18px 20px; }
+  .new-chat-list { max-height: 60vh; }
+
+  /* Profile panel */
+  .side-panel { width: 100vw; }
+
+  /* Emoji panel — full width */
+  .emoji-panel {
+    width: calc(100vw - 20px);
+    left: 10px; right: 10px;
+    bottom: 64px;
+  }
+  .emoji-grid { grid-template-columns: repeat(7,1fr); }
+
+  /* File preview strip */
+  .file-preview-strip { padding: 8px 10px 0; }
+
+  /* Encryption badge */
+  .enc-badge { font-size: 10.5px; padding: 6px; }
+
+  /* Toast */
+  .toast-wrap { bottom: 76px; }
+
+  /* Welcome screen */
+  .welcome h2 { font-size: 20px; }
+  .welcome p  { font-size: 13px; }
+  .welcome-icon { width: 64px; height: 64px; }
+  .welcome-icon svg { width: 32px; height: 32px; }
+
+  /* In-chat search bar */
+  #chatSearchBar input { font-size: 13px; padding: 7px 12px; }
 }
+
+/* ── Small mobile (≤380px) ── */
+@media (max-width: 380px) {
+  .bubble-row { max-width: 92%; }
+  .auth-card  { padding: 22px 16px; }
+  .emoji-grid { grid-template-columns: repeat(6,1fr); }
+  .emoji-btn  { font-size: 20px; }
+}
+
+/* Back button hidden on desktop */
+.back-btn { display: none; }
