@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>NexChat</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>"/>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<div class="app" id="app">
+
+  <!-- ═══════════ SIDEBAR ═══════════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Profile panel (slides over sidebar) -->
+    <div class="side-panel" id="profilePanel">
+      <div class="side-panel-header">
+        <button class="btn-icon" id="closeProfile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <h2>Profile</h2>
+      </div>
+      <div class="side-panel-body">
+        <div class="profile-hero">
+          <div class="profile-avatar-wrap" id="profileAvatarWrap">
+            <div class="avatar avatar-xl" id="profileAvatar">?</div>
+            <div class="avatar-edit-overlay" id="profileAvatarOverlay">
+              <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+              Change photo
+            </div>
+            <input type="file" id="avatarInput" accept="image/*" class="hidden"/>
+          </div>
+          <div class="profile-name" id="profileName">Loading...</div>
+          <div class="profile-status" id="profileStatusDisplay">Loading...</div>
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-section-label">About</div>
+          <div class="panel-item" id="editStatusBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" stroke-linecap="round"/></svg>
+            <div class="panel-item-text">
+              <div class="panel-item-title">Status</div>
+              <div class="panel-item-sub" id="profileStatusSub">Edit your status</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-section-label">Settings</div>
+          <div class="panel-item" id="toggleNotifItem">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+            <div class="panel-item-text">
+              <div class="panel-item-title">Notifications</div>
+              <div class="panel-item-sub">Desktop alerts</div>
+            </div>
+            <div class="toggle on" id="notifToggle"></div>
+          </div>
+          <div class="panel-item" id="toggleSoundItem">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+            <div class="panel-item-text">
+              <div class="panel-item-title">Message sounds</div>
+              <div class="panel-item-sub">Play sound on new message</div>
+            </div>
+            <div class="toggle on" id="soundToggle"></div>
+          </div>
+          <div class="panel-item" id="toggleEncItem">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1C8.676 1 6 3.676 6 7v1H4v15h16V8h-2V7c0-3.324-2.676-6-6-6zm0 2c2.276 0 4 1.724 4 4v1H8V7c0-2.276 1.724-4 4-4zm0 9a2 2 0 100 4 2 2 0 000-4z"/></svg>
+            <div class="panel-item-text">
+              <div class="panel-item-title">End-to-end encryption</div>
+              <div class="panel-item-sub">Messages are always encrypted</div>
+            </div>
+            <div class="toggle on" id="encToggle" style="opacity:.5;pointer-events:none;"></div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-section-label">Account</div>
+          <div class="panel-item" id="logoutBtn" style="color:var(--c-danger)">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="color:var(--c-danger)"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+            <div class="panel-item-text">
+              <div class="panel-item-title" style="color:var(--c-danger)">Sign out</div>
+              <div class="panel-item-sub">Log out of NexChat</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">
+          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        </div>
+        <span class="sidebar-brand-name grad-text">NexChat</span>
+      </div>
+      <div class="sidebar-actions">
+        <button class="btn-icon" id="newChatBtn" title="New chat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="12" y1="8" x2="12" y2="14"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="btn-icon" id="profileBtn" title="Profile & Settings">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="sidebar-search">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="searchInput" placeholder="Search conversations…"/>
+      </div>
+    </div>
+
+    <!-- User list -->
+    <div class="user-list" id="userList">
+      <div class="skeleton-item"><div class="skel skel-circle"></div><div class="skel-lines"><div class="skel skel-line" style="width:60%"></div><div class="skel skel-line" style="width:80%"></div></div></div>
+      <div class="skeleton-item"><div class="skel skel-circle"></div><div class="skel-lines"><div class="skel skel-line" style="width:75%"></div><div class="skel skel-line" style="width:55%"></div></div></div>
+      <div class="skeleton-item"><div class="skel skel-circle"></div><div class="skel-lines"><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:70%"></div></div></div>
+    </div>
+
+    <!-- My profile (bottom) -->
+    <div class="sidebar-profile" id="myProfileBar">
+      <div class="avatar-wrap">
+        <div class="avatar avatar-sm" id="myAvatar">?</div>
+        <span class="online-dot" id="myOnlineDot"></span>
+      </div>
+      <div class="sidebar-profile-info">
+        <div class="sidebar-profile-name" id="myName">Loading...</div>
+        <div class="sidebar-profile-status" id="myStatus">online</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════ MAIN ═══════════ -->
+  <main class="main" id="main">
+
+    <!-- Welcome screen -->
+    <div class="welcome" id="welcomeScreen">
+      <div class="welcome-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+      </div>
+      <h2>Welcome to <span class="grad-text">NexChat</span></h2>
+      <p>Click a conversation to start chatting, or start a new one with the <strong>+</strong> button.</p>
+      <div class="welcome-e2e">
+        <svg viewBox="0 0 24 24"><path d="M12 1C8.676 1 6 3.676 6 7v1H4v15h16V8h-2V7c0-3.324-2.676-6-6-6zm0 2c2.276 0 4 1.724 4 4v1H8V7c0-2.276 1.724-4 4-4zm0 9a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        All messages are end-to-end encrypted
+      </div>
+    </div>
+
+    <!-- Chat panel -->
+    <div class="chat-panel hidden" id="chatPanel">
+
+      <!-- Header -->
+      <div class="chat-header">
+        <div class="avatar-wrap" id="chatHeaderAvatarWrap">
+          <div class="avatar avatar-md" id="chatHeaderAvatar">?</div>
+          <span class="online-dot offline" id="chatOnlineDot"></span>
+        </div>
+        <div class="chat-header-info">
+          <div class="chat-header-name" id="chatHeaderName">Contact</div>
+          <div class="chat-header-sub" id="chatHeaderSub">
+            <span class="dot offline" id="chatStatusDot"></span>
+            <span id="chatStatusText">offline</span>
+          </div>
+        </div>
+        <div class="chat-header-actions">
+          <button class="btn-icon" id="chatSearchBtn" title="Search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="m21 21-4.35-4.35"/></svg>
+          </button>
+          <button class="btn-icon" id="chatMenuBtn" title="More">
+            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- In-chat search bar -->
+      <div class="hidden" id="chatSearchBar" style="padding:8px 16px;background:rgba(255,255,255,.03);border-bottom:1px solid var(--c-border);display:flex;align-items:center;gap:8px;">
+        <input id="chatSearchInput" type="text" placeholder="Search messages…"
+          style="flex:1;background:var(--c-surface-2);border:1px solid var(--c-border);border-radius:var(--r-pill);padding:8px 14px;color:var(--c-text);font-size:13.5px;outline:none;font-family:var(--font);"/>
+        <span id="chatSearchCount" style="font-size:12px;color:var(--c-text-3);white-space:nowrap;min-width:50px;text-align:center;"></span>
+        <button class="btn-icon" id="chatSearchPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg></button>
+        <button class="btn-icon" id="chatSearchNext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>
+        <button class="btn-icon" id="chatSearchClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </div>
+
+      <!-- Messages -->
+      <div class="messages-area" id="messagesArea"></div>
+
+      <!-- File preview strip -->
+      <div class="file-preview-strip hidden" id="filePreviewStrip"></div>
+
+      <!-- Input bar -->
+      <div class="input-bar" id="inputBar">
+
+        <!-- Emoji panel -->
+        <div class="emoji-panel hidden" id="emojiPanel">
+          <div class="emoji-search-wrap">
+            <input type="text" id="emojiSearchInput" placeholder="Search emoji…"/>
+          </div>
+          <div class="emoji-cats" id="emojiCats"></div>
+          <div class="emoji-grid" id="emojiGrid"></div>
+        </div>
+
+        <!-- Attach file -->
+        <button class="btn-icon" id="attachBtn" title="Attach file">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        </button>
+        <input type="file" id="fileInput" multiple accept="image/*,video/*,.pdf,.doc,.docx,.zip,.txt" class="hidden"/>
+
+        <!-- Emoji -->
+        <button class="btn-icon" id="emojiBtn" title="Emoji">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </button>
+
+        <!-- Text input -->
+        <textarea class="input-box" id="messageInput" placeholder="Type a message…" rows="1"></textarea>
+
+        <!-- Send -->
+        <button class="send-btn" id="sendBtn">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+
+      <div class="enc-badge">
+        <svg viewBox="0 0 24 24"><path d="M12 1C8.676 1 6 3.676 6 7v1H4v15h16V8h-2V7c0-3.324-2.676-6-6-6zm0 2c2.276 0 4 1.724 4 4v1H8V7c0-2.276 1.724-4 4-4zm0 9a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        Messages are end-to-end encrypted
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ═══════ NEW CHAT MODAL ═══════ -->
+<div class="modal-overlay hidden" id="newChatModal">
+  <div class="modal glass-2">
+    <div class="modal-header">
+      <h3>New Conversation</h3>
+      <button class="btn-icon" id="closeNewChat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div style="padding:0 20px 12px;">
+      <div class="search-box" style="margin-bottom:0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="newChatSearch" placeholder="Search by name or email…"/>
+      </div>
+    </div>
+    <div class="new-chat-list" id="newChatList">
+      <div style="padding:24px;text-align:center;color:var(--c-text-3);font-size:13px;">
+        Start typing to find users
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ EDIT STATUS MODAL ═══════ -->
+<div class="modal-overlay hidden" id="statusModal">
+  <div class="modal glass-2">
+    <div class="modal-header">
+      <h3>Edit Status</h3>
+      <button class="btn-icon" id="closeStatusModal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input class="input-field" type="text" id="statusInput" placeholder="What's on your mind?" maxlength="120"/>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" style="font-size:13px;height:36px;padding:0 14px;" onclick="setStatusQuick('Hey there! I am using NexChat 👋')">👋 Default</button>
+        <button class="btn btn-ghost" style="font-size:13px;height:36px;padding:0 14px;" onclick="setStatusQuick('Available 🟢')">🟢 Available</button>
+        <button class="btn btn-ghost" style="font-size:13px;height:36px;padding:0 14px;" onclick="setStatusQuick('Busy 🔴')">🔴 Busy</button>
+        <button class="btn btn-ghost" style="font-size:13px;height:36px;padding:0 14px;" onclick="setStatusQuick('At work 💼')">💼 At work</button>
+      </div>
+      <button class="btn btn-primary" id="saveStatusBtn" style="width:100%;">Save Status</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ IMAGE LIGHTBOX ═══════ -->
+<div class="lightbox hidden" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">✕</button>
+  <img id="lightboxImg" src="" alt=""/>
+</div>
+
+<!-- Context menu -->
+<div id="ctxMenu" style="display:none;position:fixed;z-index:400;background:rgba(14,14,22,.97);backdrop-filter:blur(20px);border:1px solid var(--c-border-2);border-radius:var(--r-md);min-width:160px;box-shadow:var(--shadow-lg);overflow:hidden;">
+  <div id="ctxReact"  style="padding:11px 18px;font-size:14px;cursor:pointer;transition:background .15s;" onmouseover="this.style.background='var(--c-surface-2)'" onmouseout="this.style.background=''">React 😊</div>
+  <div id="ctxCopy"   style="padding:11px 18px;font-size:14px;cursor:pointer;transition:background .15s;" onmouseover="this.style.background='var(--c-surface-2)'" onmouseout="this.style.background=''">Copy text</div>
+  <div id="ctxDelete" style="padding:11px 18px;font-size:14px;cursor:pointer;color:var(--c-danger);transition:background .15s;" onmouseover="this.style.background='var(--c-surface-2)'" onmouseout="this.style.background=''">Delete message</div>
+</div>
+
+<!-- Toast -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script type="module" src="chat.js"></script>
+</body>
+</html>
