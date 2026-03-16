@@ -71,6 +71,48 @@ const S = {
 const $ = id => document.getElementById(id);
 
 // ══════════════════════════════════════════════
+//  MOBILE NAVIGATION
+// ══════════════════════════════════════════════
+function isMobile() { return window.innerWidth <= 768; }
+
+function showChat() {
+  if (!isMobile()) return;
+  $('sidebar').classList.add('mobile-hide');
+  $('main').classList.add('mobile-show');
+}
+
+function showSidebar() {
+  if (!isMobile()) return;
+  $('main').classList.remove('mobile-show');
+  $('sidebar').classList.remove('mobile-hide');
+}
+
+// Back button
+document.addEventListener('DOMContentLoaded', () => {
+  const backBtn = $('backBtn');
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      showSidebar();
+      // Unsub from current chat when going back
+      if (S.unsubMsgs) { S.unsubMsgs(); S.unsubMsgs = null; }
+      if (S.unsubPeer)  { S.unsubPeer();  S.unsubPeer  = null; }
+      S.chatId = null; S.peer = null;
+      $('chatPanel').classList.add('hidden');
+      $('welcomeScreen').classList.remove('hidden');
+      document.querySelectorAll('.user-item').forEach(el => el.classList.remove('active'));
+    });
+  }
+});
+
+// Handle resize — reset mobile classes if window grows
+window.addEventListener('resize', () => {
+  if (!isMobile()) {
+    $('sidebar').classList.remove('mobile-hide');
+    $('main').classList.remove('mobile-show');
+  }
+});
+
+// ══════════════════════════════════════════════
 //  UTILITIES
 // ══════════════════════════════════════════════
 function esc(s) {
@@ -311,6 +353,8 @@ async function openChat(peer) {
   $('chatPanel').classList.remove('hidden');
   closeChatSearch();
   closeEmoji();
+  // On mobile — slide to chat view
+  showChat();
 
   // Loading spinner
   $('messagesArea').innerHTML = `
@@ -957,6 +1001,7 @@ $('chatMenuBtn').addEventListener('click',e=>{
     $('welcomeScreen').classList.remove('hidden');
     S.chatId=null; S.peer=null;
     document.querySelectorAll('.user-item').forEach(el=>el.classList.remove('active'));
+    showSidebar();
     m.remove();
   };
   setTimeout(()=>document.addEventListener('click',()=>m.remove(),{once:true}),50);
